@@ -1,11 +1,12 @@
 //Variables globales
-let cantidadMax = 3;
+let cantidadMax = null;
 
 // Seleccionar elementos
 const boton = document.getElementById("generarBtn");
 const contenedor = document.getElementById("contenedor");
 const cantidadColores = document.getElementById("cantidad");
 const botonesCantidad = document.querySelectorAll(".cantidad");
+const mensaje = document.getElementById("mensaje");
 
 // Función para generar color HSL aleatorio
 function generarColorHSL() {
@@ -42,31 +43,39 @@ function hslToHex(h, s, l) {
 
 // Evento click Generar colores
 boton.addEventListener("click", () => {
-    console.log("Click detectado");
+    
+    if (cantidadMax === null) {
+        mensaje.style.display = "inline-block";
+        mensaje.textContent = "⚠️ Seleccionar la cantidad a generar ⚠️";
+        console.log("Click detectado");
+    return;
+    }else{
+        // Limpiar contenedor
+        mensaje.style.display = "none";
+        contenedor.innerHTML = "";
 
-    // Limpiar contenedor
-    contenedor.innerHTML = "";
+        // Generar 3
+        for (let i = 0; i < cantidadMax; i++) {
 
-    // Generar 3 colores (fase 1)
-    for (let i = 0; i < cantidadMax; i++) {
+            const {colorHsl, h, s, l} = generarColorHSL();
+            console.log(colorHsl);
 
-        const {colorHsl, h, s, l} = generarColorHSL();
-        console.log(colorHsl);
+            // Crear elemento
+            const caja = document.createElement("div");
+            caja.classList.add("color");
 
-        // Crear elemento
-        const caja = document.createElement("div");
-        caja.classList.add("color");
+            // Aplicar color
+            caja.style.backgroundColor = colorHsl;
 
-        // Aplicar color
-        caja.style.backgroundColor = colorHsl;
+            //Pasar de HSL a Hexadecimal
+            const colorHex = hslToHex(h, s, l);
+            // Mostrar texto
+            caja.textContent = colorHex;
 
-        //Pasar de HSL a Hexadecimal
-        const colorHex = hslToHex(h, s, l);
-        // Mostrar texto
-        caja.textContent = colorHex;
+            // Agregar al DOM
+            contenedor.appendChild(caja);
+        }
 
-        // Agregar al DOM
-        contenedor.appendChild(caja);
     }
 });
 
@@ -77,5 +86,13 @@ botonesCantidad.forEach((btn) => {
         cantidadMax = parseInt(btn.dataset.cantidad);
 
         console.log("Cantidad seleccionada:", cantidadMax);
+
+        // 1. Sacar activo de todos
+        botonesCantidad.forEach(b => b.classList.remove("activo"));
+
+        // 2. Agregar activo al clickeado
+        btn.classList.add("activo");
+
+        mensaje.style.display = "none";
     });
 });

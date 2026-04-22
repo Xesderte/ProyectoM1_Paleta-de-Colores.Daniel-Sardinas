@@ -4,23 +4,75 @@ body {
     margin-top: 20px;
 }
 
+/* Contenedor de colores */
 #contenedor {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     justify-content: center;
-    gap: 10px;
+    gap: 0.99rem;
     margin-top: 20px;
-    }
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
+/* Cada color */
 .color {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: black;
     font-weight: bold;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    padding: 5px;
 }
 
-#cantidadColores{
+#generarBtn {
+    background-color: #b194ce; 
+    color: black;
+    border: 2px solid black;
+    border-radius: 50px; 
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#cantidadColores {
+    background-color: #f3e8ff; 
+    border: 2px solid black;
+    border-radius: 12px;
+    padding: 15px;
+    display: inline-block;
     margin-top: 20px;
+}
+
+.cantidad {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    border-radius: 20px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cantidad.activo {
+    background-color: #22c55e; 
+    color: black;
+}
+
+#mensaje {
+    background-color: #fee2e2;
+    color: #7f1d1d; 
+    border: 2px solid #dc2626;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-top: 15px;
+    display: none; 
+    font-weight: bold;
 }
