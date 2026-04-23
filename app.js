@@ -1,5 +1,6 @@
 //Variables globales
 let cantidadMax = null;
+let mitad = null;
 
 // Seleccionar elementos
 const boton = document.getElementById("generarBtn");
@@ -17,6 +18,19 @@ function generarColorHSL() {
     colorHsl =`hsl(${h}, ${s}%, ${l}%)`;
 
     return {colorHsl, h, s, l };
+}
+
+// Función para generar color hexadecimal aleatorio
+function generarColorHex() {
+    const letras = "0123456789ABCDEF";
+    let color = "#";
+
+    for (let i = 0; i < 6; i++) {
+        const random = Math.floor(Math.random() * 16);
+        color += letras[random];
+    }
+
+    return color;
 }
 
 //Funcion para convertir HSL a Hexadecimal
@@ -54,8 +68,8 @@ boton.addEventListener("click", () => {
         mensaje.style.display = "none";
         contenedor.innerHTML = "";
 
-        // Generar 3
-        for (let i = 0; i < cantidadMax; i++) {
+        // Generar Colores HSL y Hexadecimal
+        for (let i = 0; i < mitad; i++) {
 
             const {colorHsl, h, s, l} = generarColorHSL();
             console.log(colorHsl);
@@ -76,6 +90,23 @@ boton.addEventListener("click", () => {
             contenedor.appendChild(caja);
         }
 
+        for(let i = mitad; i < cantidadMax; i++){
+            const colorHex = generarColorHex();
+            console.log(colorHex);
+
+            // Crear elemento
+            const caja = document.createElement("div");
+            caja.classList.add("color");
+
+            // Aplicar color
+            caja.style.backgroundColor = colorHex;
+
+            // Mostrar texto
+            caja.textContent = colorHex;
+
+            // Agregar al DOM
+            contenedor.appendChild(caja);
+        }
     }
 });
 
@@ -84,14 +115,18 @@ botonesCantidad.forEach((btn) => {
     btn.addEventListener("click", () => {
 
         cantidadMax = parseInt(btn.dataset.cantidad);
+        mitad = Math.floor(cantidadMax / 2) + (cantidadMax % 2); // Si es impar, agregar uno más a la mitad
 
         console.log("Cantidad seleccionada:", cantidadMax);
+        console.log("Mitad de la cantidad:", mitad);
 
         // 1. Sacar activo de todos
         botonesCantidad.forEach(b => b.classList.remove("activo"));
 
         // 2. Agregar activo al clickeado
         btn.classList.add("activo");
+
+        console.log("Botón clickeado:", btn);
 
         mensaje.style.display = "none";
     });
