@@ -55,60 +55,74 @@ function hslToHex(h, s, l) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
 }
 
+
 // Evento click Generar colores
 boton.addEventListener("click", () => {
     
     if (cantidadMax === null) {
         mensaje.style.display = "inline-block";
         mensaje.textContent = "⚠️ Seleccionar la cantidad a generar ⚠️";
-        console.log("Click detectado");
-    return;
-    }else{
-        // Limpiar contenedor
-        mensaje.style.display = "none";
-        contenedor.innerHTML = "";
+        return;
+    }
 
-        // Generar Colores HSL y Hexadecimal
-        for (let i = 0; i < mitad; i++) {
+    mensaje.style.display = "none";
 
-            const {colorHsl, h, s, l} = generarColorHSL();
-            console.log(colorHsl);
+    const cajas = contenedor.querySelectorAll(".color");
 
-            // Crear elemento
-            const caja = document.createElement("div");
-            caja.classList.add("color");
+    // 🔥 1. ACTUALIZAR LAS EXISTENTES
+    cajas.forEach((caja, index) => {
 
-            // Aplicar color
+        if (caja.classList.contains("bloqueado")) return;
+
+        if (index < mitad) {
+            const { colorHsl, h, s, l } = generarColorHSL();
             caja.style.backgroundColor = colorHsl;
-
-            //Pasar de HSL a Hexadecimal
-            const colorHex = hslToHex(h, s, l);
-            // Mostrar texto
-            caja.textContent = colorHex;
-
-            // Agregar al DOM
-            contenedor.appendChild(caja);
-        }
-
-        for(let i = mitad; i < cantidadMax; i++){
+            caja.textContent = hslToHex(h, s, l);
+        } else {
             const colorHex = generarColorHex();
-            console.log(colorHex);
+            caja.style.backgroundColor = colorHex;
+            caja.textContent = colorHex;
+        }
+        console.log("actualizando caja", index);
+    });
 
-            // Crear elemento
+    // 🔥 2. SI FALTAN CAJAS → CREAR
+    if (cajas.length < cantidadMax) {
+
+        for (let i = cajas.length; i < cantidadMax; i++) {
+
             const caja = document.createElement("div");
             caja.classList.add("color");
 
-            // Aplicar color
-            caja.style.backgroundColor = colorHex;
+            caja.addEventListener("click", () => {
+                caja.classList.toggle("bloqueado");
+            });
 
-            // Mostrar texto
-            caja.textContent = colorHex;
+            if (i < mitad) {
+                const { colorHsl, h, s, l } = generarColorHSL();
+                caja.style.backgroundColor = colorHsl;
+                caja.textContent = hslToHex(h, s, l);
+                console.log("creando caja", i,"--", colorHsl);
+            } else {
+                const colorHex = generarColorHex();
+                caja.style.backgroundColor = colorHex;
+                caja.textContent = colorHex;
+                console.log("creando caja", i,"--", colorHex);
+            }
 
-            // Agregar al DOM
             contenedor.appendChild(caja);
         }
     }
+
+    // 🔥 3. SI SOBRAN CAJAS → ELIMINAR
+    if (cajas.length > cantidadMax) {
+        for (let i = cajas.length - 1; i >= cantidadMax; i--) {
+            console.log("eliminando caja", i);
+            cajas[i].remove();
+        }
+    }
 });
+
 
 // Evento click para botones de cantidad
 botonesCantidad.forEach((btn) => {
@@ -125,8 +139,6 @@ botonesCantidad.forEach((btn) => {
 
         // 2. Agregar activo al clickeado
         btn.classList.add("activo");
-
-        console.log("Botón clickeado:", btn);
 
         mensaje.style.display = "none";
     });
